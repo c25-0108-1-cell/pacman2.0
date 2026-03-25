@@ -11,7 +11,7 @@ public final class MenuPanel extends JPanel {
         setLayout(null); //free positioning
 
         //load background image
-        background = new ImageIcon("BG.png").getImage();
+        background = new ImageIcon(getClass().getResource("./BG.png")).getImage();
 
         JLabel title = new JLabel("");
         title.setFont(new Font("Arial", Font.BOLD, 50));
@@ -40,6 +40,7 @@ public final class MenuPanel extends JPanel {
 
             for(Component comp : mainPanel.getComponents()){
                 if(comp instanceof PacMan){
+                    ((PacMan) comp).startGame();
                     comp.requestFocus();
                 }
             }
