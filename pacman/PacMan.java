@@ -309,15 +309,13 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
                 }
             }
 
-            // Ensure all ghosts keep moving, do not get stuck at velocity zero
+            // Ensure all ghosts keep moving continuously with random direction changes
             if (ghost.getVelocityX() == 0 && ghost.getVelocityY() == 0) {
                 ghost.changeDirectionRandomly();
             }
 
-            // Add more random movement (small chance to change direction each frame)
-            if (random.nextDouble() < 0.30) {
-                ghost.changeDirectionRandomly();
-            }
+            // Continuous random movement - ghosts change direction frequently
+            ghost.changeDirectionRandomly();
 
             ghost.move();
             for (Wall wall : walls) {

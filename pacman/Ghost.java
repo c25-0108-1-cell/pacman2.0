@@ -12,6 +12,8 @@ public class Ghost extends Entity {
     private boolean eaten = false;
     private int eatenTimer = 0;
     private static final int EATEN_DURATION = 100; // frames
+    private int framesSinceDirectionChange = 0;
+    private int minFramesBetweenChanges = 60; // minimum frames before next random direction change (1.5 seconds at 40fps)
 
     public Ghost(Image normalImage, Image scaredImage, int x, int y, int width, int height) {
         super(normalImage, x, y, width, height);
@@ -62,8 +64,17 @@ public class Ghost extends Entity {
     }
 
     public void changeDirectionRandomly() {
-        char newDirection = directions[random.nextInt(4)];
-        updateDirection(newDirection);
+        framesSinceDirectionChange++;
+        
+        // Continuous random movement - change direction frequently but not every frame
+        if (framesSinceDirectionChange >= 15) { // Change direction every 15 frames (0.375 seconds at 40fps)
+            // 40% chance to change direction when timer expires
+            if (random.nextDouble() < 0.40) {
+                char newDirection = directions[random.nextInt(4)];
+                updateDirection(newDirection);
+                framesSinceDirectionChange = 0;
+            }
+        }
     }
 
     public void setScared(boolean scared) {
@@ -98,5 +109,6 @@ public class Ghost extends Entity {
     public void resetEaten() {
         eaten = false;
         eatenTimer = 0;
+        framesSinceDirectionChange = 0;
     }
 }
