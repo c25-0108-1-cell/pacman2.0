@@ -109,6 +109,7 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
     }
 
     public void loadMap() {
+         SoundManager.playSound("game.wav");
         walls = new ArrayList<>();
         foods = new ArrayList<>();
         ghosts = new ArrayList<>();
