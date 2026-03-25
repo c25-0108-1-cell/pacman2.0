@@ -105,11 +105,15 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
         }
         //how long it takes to start timer, milliseconds gone between frames
         gameLoop = new Timer(GameConstants.DELAY, this); //20fps
+        // gameLoop.start(); // Remove this to not start immediately
+    }
+
+    public void startGame() {
+        SoundManager.playLoopingSound("game.wav");
         gameLoop.start();
     }
 
     public void loadMap() {
-         SoundManager.playSound("game.wav");
         walls = new ArrayList<>();
         foods = new ArrayList<>();
         ghosts = new ArrayList<>();
@@ -222,7 +226,27 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
         //score
         g.setFont(new Font("Arial", Font.PLAIN, 18));
         if (gameOver) {
-            g.drawString("Game Over: " + String.valueOf(score), tileSize/2, tileSize/2);
+            g.drawString("Game Over: " + String.valueOf(score), tileSize/2, tileSize/2); 
+            SoundManager.playSound("pacman_death.wav");
+            
+            int choice = JOptionPane.showConfirmDialog(
+                this,
+                "Game Over. Restart?",
+                "Game Over",
+                JOptionPane.YES_NO_OPTION
+            );
+
+            if (choice == JOptionPane.YES_OPTION) {
+                loadMap();
+                resetPositions();
+                lives = 3;
+                score = 0;
+                gameOver = false;
+                SoundManager.playLoopingSound("game.wav");
+                gameLoop.start();
+            } else {
+                System.exit(0);
+            }
         }
         else {
             g.drawString("Level: " + level + " x" + String.valueOf(lives) + " Score: " + String.valueOf(score), tileSize/2, tileSize/2);
@@ -278,6 +302,7 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
                     lives -= 1;
                     if (lives == 0) {
                         gameOver = true;
+                        SoundManager.stopBackgroundMusic();
                         return;
                     }
                     resetPositions();
@@ -401,36 +426,5 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {
-        if (gameOver) {
-            int choice = JOptionPane.showConfirmDialog(
-                this,
-                "Game Over. Restart?",
-                "Game Over",
-                JOptionPane.YES_NO_OPTION
-            );
-
-            if (choice == JOptionPane.YES_OPTION) {
-                loadMap();
-                resetPositions();
-                lives = 3;
-                score = 0;
-                gameOver = false;
-                gameLoop.start();
-            } else {
-                System.exit(0);
-            }
-            SoundManager.playSound("pacman_death.wav");
-        }
-    }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Pacman Game");
-        PacMan game = new PacMan();
-        frame.add(game);
-        frame.pack();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-    }
+    public void keyReleased(KeyEvent e) { }
 }
