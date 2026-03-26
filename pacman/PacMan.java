@@ -26,6 +26,7 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
     private final Image cherryImage;
     private final Image scaredGhostImage;
     private final Image[] ghostImages;
+    private final Image heartImage;
 
     // Game map
     private final String[] tileMap = {
@@ -91,6 +92,7 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
         pacmanRightImage = new ImageIcon(getClass().getResource("./pacmanRight.png")).getImage();
 
         cherryImage = new ImageIcon(getClass().getResource("./cherry.png")).getImage();
+        heartImage = new ImageIcon(getClass().getResource("./heart.png")).getImage();
         cherry = new Food(cherryImage, 9 * tileSize, 11 * tileSize, tileSize, tileSize);
         scaredGhostImage = new ImageIcon(getClass().getResource("./scaredGhost.png")).getImage();
         ghostImages = new Image[]{blueGhostImage, orangeGhostImage, pinkGhostImage, redGhostImage};
@@ -249,7 +251,10 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
             }
         }
         else {
-            g.drawString("Level: " + level + " x" + String.valueOf(lives) + " Score: " + String.valueOf(score), tileSize/2, tileSize/2);
+            g.drawString("Level: " + level + " x" + " Score: " + String.valueOf(score), tileSize/2, tileSize/2);
+            for (int i = 0; i < lives; i++) {
+                g.drawImage(heartImage, 10 + i * 30, 20, 20, 20, null);
+            }
         }
     }
 
@@ -271,6 +276,10 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
         if (cherry != null && collision(pacman, cherry)) {
             score += 100;
             cherry = null;
+            lives += 1;
+            if (lives > 5) {
+                lives = 5;
+            }
             poweredUp = true;
             powerUpTimer = POWER_UP_DURATION;
             for (Ghost g : ghosts) {
