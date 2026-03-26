@@ -304,8 +304,8 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
                 if (poweredUp) {
                     score += 800; // 4x multiplier (4x 200)
                     ghost.eat();
-                    // Optional: play sound for eating ghost
-                    // SoundManager.playSound("pacman_eatghost.wav");
+                    
+                     SoundManager.playSound("eatingghost.wav");
                 } else {
                     SoundManager.playSound("dead.wav");
                     lives -= 1;
